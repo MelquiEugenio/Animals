@@ -26,6 +26,7 @@ class _HomeViewState extends State<HomeView> {
     'dinosaur',
     'dog',
     'dove',
+    'duck',
     'elephant',
     'falcon',
     'ferret',
@@ -78,6 +79,7 @@ class _HomeViewState extends State<HomeView> {
           return AnimalCard(
             imageAsset: 'assets/images/${animalsNames[index]}.png',
             soundAsset: 'sounds/${animalsNames[index]}.mp3',
+            animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
           );
         },
       ),

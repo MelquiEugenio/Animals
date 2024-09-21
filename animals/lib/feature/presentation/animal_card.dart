@@ -4,11 +4,13 @@ import 'package:audioplayers/audioplayers.dart';
 class AnimalCard extends StatelessWidget {
   final String imageAsset;
   final String soundAsset;
+  final String animalNameSoundAsset;
 
   const AnimalCard({
     super.key,
     required this.imageAsset,
     required this.soundAsset,
+    required this.animalNameSoundAsset,
   });
 
   @override
@@ -49,7 +51,7 @@ class AnimalCard extends StatelessWidget {
                   children: [
                     FloatingActionButton(
                       onPressed: () {
-                        // TO DO
+                        player.play(AssetSource(animalNameSoundAsset));
                       },
                       mini: true,
                       backgroundColor: Colors.lightGreenAccent,
