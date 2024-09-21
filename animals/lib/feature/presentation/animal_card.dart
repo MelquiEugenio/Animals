@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:permission_handler/permission_handler.dart';
 
 class AnimalCard extends StatefulWidget {
   final String animalName;
   final String imageAsset;
   final String soundAsset;
   final String animalNameSoundAsset;
+  final bool microphonePermission;
 
   const AnimalCard({
     super.key,
@@ -15,89 +16,111 @@ class AnimalCard extends StatefulWidget {
     required this.imageAsset,
     required this.soundAsset,
     required this.animalNameSoundAsset,
+    required this.microphonePermission,
   });
 
   @override
-  _AnimalCardState createState() => _AnimalCardState();
+  State<AnimalCard> createState() => _AnimalCardState();
 }
 
 class _AnimalCardState extends State<AnimalCard> {
-  late AudioPlayer player;
-  late stt.SpeechToText speechToText;
-  Color backgroundColor = Colors.white;
-  bool isListening = false;
-  bool isInitializing = false;
-  bool isSpeechAvailable = false;
+  late final AudioPlayer _player;
+  late final stt.SpeechToText _speechToText;
+  Color _backgroundColor = Colors.white;
+  bool _isSpeechAvailable = false;
+  bool _isRecording = false;
 
   @override
   void initState() {
     super.initState();
-    player = AudioPlayer();
-    speechToText = stt.SpeechToText();
-    initSpeechToText();
+    _player = AudioPlayer();
+    _speechToText = stt.SpeechToText();
+    _initSpeechToText();
   }
 
   @override
   void dispose() {
-    player.dispose();
+    _player.dispose();
     super.dispose();
   }
 
-  Future<void> initSpeechToText() async {
-    if (isInitializing) return;
-    isInitializing = true;
+  Future<void> _initSpeechToText() async {
+    try {
+      _isSpeechAvailable = await _speechToText.initialize(
+        onError: (error) => print('Speech recognition error: $error'),
+        debugLogging: true,
+      );
+    } catch (e) {
+      print("Error initializing speech recognition: $e");
+      _isSpeechAvailable = false;
+    }
+    if (mounted) setState(() {});
+  }
 
-    // Request microphone permission
-    var status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      print('Microphone permission not granted');
-      isSpeechAvailable = false;
-      isInitializing = false;
-      setState(() {});
+  void _handleMicPress() async {
+    if (!widget.microphonePermission) {
+      _showSnackBar('Microphone permission is not granted');
       return;
     }
 
-    try {
-      bool available = await speechToText.initialize(
-          onError: (error) => print('Speech recognition error: $error'),
-          debugLogging: true);
-      print('Speech recognition available: $available');
-      isSpeechAvailable = available;
-    } catch (e) {
-      print("Error initializing speech recognition: $e");
-      isSpeechAvailable = false;
-    } finally {
-      isInitializing = false;
-      setState(() {});
+    if (!_isSpeechAvailable) {
+      await _initSpeechToText();
+      if (!_isSpeechAvailable) {
+        _showSnackBar('Speech recognition is not available');
+        return;
+      }
     }
+
+    if (!_isRecording) {
+      setState(() {
+        _isRecording = true;
+      });
+
+      await _speechToText.listen(
+        onResult: _handleSpeechResult,
+        listenFor: const Duration(seconds: 5),
+        cancelOnError: true,
+        partialResults: false,
+      );
+    } else {
+      setState(() {
+        _isRecording = false;
+      });
+      await _speechToText.stop();
+    }
+  }
+
+  void _handleSpeechResult(SpeechRecognitionResult result) {
+    if (result.finalResult) {
+      final recognizedText = result.recognizedWords.toLowerCase();
+      setState(() {
+        _backgroundColor = recognizedText.contains(widget.animalName.toLowerCase())
+            ? Colors.lightGreenAccent
+            : const Color(0xffff7f7f);
+        _isRecording = false;  // Reset recording state
+      });
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
-    final player = AudioPlayer();
-    final speechToText = stt.SpeechToText();
-
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 0, left: 16, right: 16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: GestureDetector(
-        onTap: () {
-          player.play(AssetSource(widget.soundAsset));
-        },
+        onTap: () => _player.play(AssetSource(widget.soundAsset)),
         child: Card(
-          color:
-              backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
+          color: _backgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           child: Row(
             children: [
               Expanded(
                 flex: 3,
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(20.0),
-                  ),
+                  borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
                   child: Image.asset(
                     widget.imageAsset,
                     fit: BoxFit.fitHeight,
@@ -106,76 +129,19 @@ class _AnimalCardState extends State<AnimalCard> {
                 ),
               ),
               Expanded(
-                flex: 1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    FloatingActionButton(
-                      onPressed: () async {
-                        if (isInitializing) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Speech recognition is initializing')),
-                          );
-                          return;
-                        }
-
-                        if (!isSpeechAvailable) {
-                          await initSpeechToText(); // Try to initialize again if it failed before
-                        }
-
-                        if (isSpeechAvailable) {
-                          if (isListening) {
-                            await speechToText.stop();
-                            setState(() {
-                              isListening = false;
-                            });
-                          } else {
-                            setState(() {
-                              isListening = true;
-                              backgroundColor = Colors
-                                  .white; // Reset color when starting to listen
-                            });
-                            await speechToText.listen(
-                              onResult: (result) {
-                                final recognizedText = result.recognizedWords;
-                                setState(() {
-                                  print(
-                                      '______________>>>>>>>>>>>>: $recognizedText');
-                                  if (recognizedText
-                                      .toLowerCase()
-                                      .contains(widget.animalName)) {
-                                    backgroundColor = Colors.lightGreenAccent;
-                                  } else {
-                                    backgroundColor = const Color(0xffff7f7f);
-                                  }
-                                });
-                              },
-                            );
-                          }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    'Speech recognition is not available')),
-                          );
-                        }
-                      },
-                      mini: true,
-                      backgroundColor: Colors.lightBlueAccent,
-                      shape: const CircleBorder(),
-                      child: const Icon(Icons.mic, color: Colors.white),
+                    _buildActionButton(
+                      onPressed: _handleMicPress,
+                      color: _isRecording ? Colors.red : Colors.lightBlueAccent,
+                      icon: _isRecording ? Icons.fiber_manual_record : Icons.mic,
                     ),
                     const SizedBox(height: 16),
-                    FloatingActionButton(
-                      onPressed: () {
-                        player.play(AssetSource(widget.animalNameSoundAsset));
-                      },
-                      mini: true,
-                      backgroundColor: Colors.lightGreenAccent,
-                      shape: const CircleBorder(),
-                      child: const Icon(Icons.play_arrow),
+                    _buildActionButton(
+                      onPressed: () => _player.play(AssetSource(widget.animalNameSoundAsset)),
+                      color: Colors.lightGreenAccent,
+                      icon: Icons.play_arrow,
                     ),
                   ],
                 ),
@@ -184,6 +150,20 @@ class _AnimalCardState extends State<AnimalCard> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required VoidCallback onPressed,
+    required Color color,
+    required IconData icon,
+  }) {
+    return FloatingActionButton(
+      onPressed: onPressed,
+      mini: true,
+      backgroundColor: color,
+      shape: const CircleBorder(),
+      child: Icon(icon, color: Colors.white),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:animals/feature/presentation/animal_card.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -9,6 +10,28 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  bool isMicPermited = false;
+  bool isRequestingPermission = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _requestMicrophonePermission();
+  }
+
+  Future<void> _requestMicrophonePermission() async {
+    final status = await Permission.microphone.request();
+    if (status.isGranted) {
+      isMicPermited = true;
+    } else {
+      isMicPermited = false;
+    }
+
+    setState(() {
+      isRequestingPermission = false;
+    });
+  }
+
   final List<String> animalsNames = [
     'african grey parrot',
     'alligator',
@@ -66,8 +89,22 @@ class _HomeViewState extends State<HomeView> {
     'zebra',
   ];
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _bodyLoading() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Animals For Kids',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _body() {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -90,6 +127,7 @@ class _HomeViewState extends State<HomeView> {
                   imageAsset: 'assets/images/${animalsNames[index]}.png',
                   soundAsset: 'sounds/${animalsNames[index]}.mp3',
                   animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
+                  microphonePermission: isMicPermited,
                 );
               },
             ),
@@ -98,5 +136,13 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isRequestingPermission) {
+      return _bodyLoading();
+    }
+    return _body();
   }
 }
