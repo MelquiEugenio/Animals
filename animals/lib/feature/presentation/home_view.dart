@@ -10,7 +10,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final List<String> animalsNames = [
-    'african-grey-parrot',
+    'african grey parrot',
     'alligator',
     'alpaca',
     'anteater',
@@ -18,7 +18,7 @@ class _HomeViewState extends State<HomeView> {
     'ape',
     'bat',
     'bee',
-    'bowhead-whale',
+    'bowhead whale',
     'butterfly',
     'cat',
     'chicken',
@@ -32,13 +32,13 @@ class _HomeViewState extends State<HomeView> {
     'ferret',
     'frog',
     'giraffe',
-    'guinea-pig',
+    'guinea pig',
     'hedgehog',
     'hippopotamus',
     'horse',
-    'humpback-whale',
+    'humpback whale',
     'hyena',
-    'komodo-dragon',
+    'komodo dragon',
     'leopard',
     'lion',
     'lizard',
@@ -70,7 +70,10 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Animals'),
+        title: const Text(
+          'Animals For Kids',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -83,6 +86,7 @@ class _HomeViewState extends State<HomeView> {
               itemCount: animalsNames.length,
               itemBuilder: (context, index) {
                 return AnimalCard(
+                  animalName: animalsNames[index],
                   imageAsset: 'assets/images/${animalsNames[index]}.png',
                   soundAsset: 'sounds/${animalsNames[index]}.mp3',
                   animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
