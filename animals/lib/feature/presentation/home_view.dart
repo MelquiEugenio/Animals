@@ -73,15 +73,25 @@ class _HomeViewState extends State<HomeView> {
         title: const Text('Animals'),
       ),
       backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemCount: animalsNames.length,
-        itemBuilder: (context, index) {
-          return AnimalCard(
-            imageAsset: 'assets/images/${animalsNames[index]}.png',
-            soundAsset: 'sounds/${animalsNames[index]}.mp3',
-            animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
-          );
-        },
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: animalsNames.length,
+              itemBuilder: (context, index) {
+                return AnimalCard(
+                  imageAsset: 'assets/images/${animalsNames[index]}.png',
+                  soundAsset: 'sounds/${animalsNames[index]}.mp3',
+                  animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }

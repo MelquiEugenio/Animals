@@ -55,7 +55,8 @@ class AnimalCard extends StatelessWidget {
                       },
                       mini: true,
                       backgroundColor: Colors.lightGreenAccent,
-                      child: const Icon(Icons.play_arrow, ),
+                      shape: const CircleBorder(),
+                      child: const Icon(Icons.play_arrow),
                     ),
                     const SizedBox(height: 16),
                     FloatingActionButton(
@@ -64,7 +65,8 @@ class AnimalCard extends StatelessWidget {
                       },
                       mini: true,
                       backgroundColor: Colors.lightBlueAccent,
-                      child: const Icon(Icons.mic, color: Colors.white,),
+                      shape: const CircleBorder(),
+                      child: const Icon(Icons.mic, color: Colors.white),
                     ),
                   ],
 
