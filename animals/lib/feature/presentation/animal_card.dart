@@ -190,7 +190,7 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
                     _buildActionButton(
                       onPressed: () => _player.play(AssetSource(widget.animalNameSoundAsset)),
                       color: Colors.lightGreenAccent,
-                      icon: Icons.play_arrow,
+                      icon: Icons.volume_up,
                     ),
                   ],
                 ),
