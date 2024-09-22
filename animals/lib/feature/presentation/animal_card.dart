@@ -23,24 +23,40 @@ class AnimalCard extends StatefulWidget {
   State<AnimalCard> createState() => _AnimalCardState();
 }
 
-class _AnimalCardState extends State<AnimalCard> {
+class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateMixin {
   late final AudioPlayer _player;
+  late final AudioPlayer _recordingFinishPlayer;  // New AudioPlayer for finish sound
   late final stt.SpeechToText _speechToText;
   Color _backgroundColor = Colors.white;
   bool _isSpeechAvailable = false;
   bool _isRecording = false;
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _player = AudioPlayer();
+    _recordingFinishPlayer = AudioPlayer();  // Initialize the new AudioPlayer
     _speechToText = stt.SpeechToText();
     _initSpeechToText();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _animation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0, end: -0.2), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -0.2, end: 0.2), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 0.2, end: 0), weight: 1),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
   void dispose() {
     _player.dispose();
+    _recordingFinishPlayer.dispose();  // Dispose the new AudioPlayer
+    _controller.dispose();
     super.dispose();
   }
 
@@ -82,6 +98,15 @@ class _AnimalCardState extends State<AnimalCard> {
         cancelOnError: true,
         partialResults: false,
       );
+
+      // Add a timeout to reset the state if no result is received
+      Future.delayed(const Duration(seconds: 5), () {
+        if (_isRecording) {
+          setState(() {
+            _isRecording = false;
+          });
+        }
+      });
     } else {
       setState(() {
         _isRecording = false;
@@ -94,12 +119,27 @@ class _AnimalCardState extends State<AnimalCard> {
     if (result.finalResult) {
       final recognizedText = result.recognizedWords.toLowerCase();
       setState(() {
-        _backgroundColor = recognizedText.contains(widget.animalName.toLowerCase())
-            ? Colors.lightGreenAccent
-            : const Color(0xffff7f7f);
+        recognizedText.contains(widget.animalName.toLowerCase())
+            ? {
+              _backgroundColor = Colors.lightGreenAccent,
+              _playRecordingFinishSound(true)
+            }
+            : {
+              _backgroundColor = const Color(0xffff7f7f),
+              _playRecordingFinishSound(false)
+            };
         _isRecording = false;  // Reset recording state
       });
     }
+  }
+
+  void _playRecordingFinishSound(bool isCorrect) {
+    _recordingFinishPlayer.play(AssetSource(isCorrect ? 'sounds/positive-answer.wav' : 'sounds/negative-answer.wav'));  // Replace with your sound file
+  }
+
+  void _handleTap() {
+    _player.play(AssetSource(widget.soundAsset));
+    _controller.forward(from: 0);
   }
 
   void _showSnackBar(String message) {
@@ -111,7 +151,7 @@ class _AnimalCardState extends State<AnimalCard> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: GestureDetector(
-        onTap: () => _player.play(AssetSource(widget.soundAsset)),
+        onTap: _handleTap,
         child: Card(
           color: _backgroundColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -119,12 +159,21 @@ class _AnimalCardState extends State<AnimalCard> {
             children: [
               Expanded(
                 flex: 3,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
-                  child: Image.asset(
-                    widget.imageAsset,
-                    fit: BoxFit.fitHeight,
-                    height: 150,
+                child: AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: _animation.value,
+                      child: child,
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
+                    child: Image.asset(
+                      widget.imageAsset,
+                      fit: BoxFit.fitHeight,
+                      height: 150,
+                    ),
                   ),
                 ),
               ),

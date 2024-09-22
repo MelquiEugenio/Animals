@@ -33,7 +33,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   final List<String> animalsNames = [
-    'african grey parrot',
+    'african gray parrot',
     'alligator',
     'alpaca',
     'anteater',
