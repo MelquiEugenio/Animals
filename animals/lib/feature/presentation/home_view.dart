@@ -134,7 +134,7 @@ class _HomeViewState extends State<HomeView> {
               itemBuilder: (context, index) {
                 return AnimalCard(
                   animalName: animalsNames[index],
-                  imageAsset: 'assets/images/fruits/apple.png',
+                  imageAsset: 'assets/images/${animalsNames[index]}.png',
                   soundAsset: 'sounds/${animalsNames[index]}.mp3',
                   animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
                   microphonePermission: isMicPermited,
