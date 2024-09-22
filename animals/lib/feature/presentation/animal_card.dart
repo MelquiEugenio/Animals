@@ -29,7 +29,7 @@ class _AnimalCardState extends State<AnimalCard>
   late final AudioPlayer
       _recordingFinishPlayer; // New AudioPlayer for finish sound
   late final stt.SpeechToText _speechToText;
-  Color _backgroundColor = Colors.white;
+  Color _backgroundColor = const Color(0xFF424549);
   bool _isSpeechAvailable = false;
   bool _isRecording = false;
   late AnimationController _controller;
@@ -158,6 +158,7 @@ class _AnimalCardState extends State<AnimalCard>
       child: GestureDetector(
         onTap: _handleTap,
         child: Card(
+          elevation: 5,
           color: _backgroundColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -191,7 +192,7 @@ class _AnimalCardState extends State<AnimalCard>
                     _buildActionButton(
                       onPressed: () => _player
                           .play(AssetSource(widget.animalNameSoundAsset)),
-                      color: Colors.lightGreenAccent,
+                      color: Colors.lightGreen,
                       icon: Icons.volume_up,
                     ),
                     const SizedBox(height: 16),

@@ -107,12 +107,13 @@ class _HomeViewState extends State<HomeView> {
   Widget _body() {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF282b30),
         title: const Text(
-          'Animals For Kids',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Animals Names and Sounds',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF282b30),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -127,7 +128,7 @@ class _HomeViewState extends State<HomeView> {
                       Icon(Icons.touch_app, color: Colors.orange),
                       SizedBox(width: 8),
                       Text('Tap on an animal to hear its sound',
-                          style: TextStyle(fontSize: 14)),
+                          style: TextStyle(fontSize: 14, color: Colors.white)),
                     ],
                   ),
                   SizedBox(height: 12),
@@ -136,7 +137,8 @@ class _HomeViewState extends State<HomeView> {
                       Icon(Icons.volume_up, color: Colors.lightGreenAccent),
                       SizedBox(width: 8),
                       Text('Listen to the pronunciation of animal names',
-                          style: TextStyle(fontSize: 14)),
+                      
+                          style: TextStyle(fontSize: 14, color: Colors.white)),
                     ],
                   ),
                   SizedBox(height: 12),
@@ -145,7 +147,7 @@ class _HomeViewState extends State<HomeView> {
                       Icon(Icons.mic, color: Colors.lightBlueAccent),
                       SizedBox(width: 8),
                       Text('Use the mic to practice pronunciation',
-                          style: TextStyle(fontSize: 14)),
+                          style: TextStyle(fontSize: 14,color: Colors.white)),
                     ],
                   ),
                 ],
