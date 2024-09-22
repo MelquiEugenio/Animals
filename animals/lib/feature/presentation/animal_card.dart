@@ -77,14 +77,14 @@ class _AnimalCardState extends State<AnimalCard>
 
   void _handleMicPress() async {
     if (!widget.microphonePermission) {
-      _showSnackBar('Microphone permission is not granted');
+      _showSnackBar('A permissão para acessar o microfone não foi concedida.');
       return;
     }
 
     if (!_isSpeechAvailable) {
       await _initSpeechToText();
       if (!_isSpeechAvailable) {
-        _showSnackBar('Speech recognition is not available');
+        _showSnackBar('O reconhecimento de fala não está disponível.');
         return;
       }
     }
