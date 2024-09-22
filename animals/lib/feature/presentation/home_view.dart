@@ -127,40 +127,6 @@ class _HomeViewState extends State<HomeView> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            // const Padding(
-            //   padding:
-            //       EdgeInsets.only(left: 16, right: 16, top: 8.0, bottom: 8.0),
-            //   child: Column(
-            //     children: [
-            //       Row(
-            //         children: [
-            //           Icon(Icons.touch_app, color: Colors.orange),
-            //           SizedBox(width: 8),
-            //           Text('Toque em um animal para ouvir seu som',
-            //               style: TextStyle(fontSize: 14, color: Colors.white)),
-            //         ],
-            //       ),
-            //       SizedBox(height: 12),
-            //       Row(
-            //         children: [
-            //           Icon(Icons.volume_up, color: Colors.lightGreenAccent),
-            //           SizedBox(width: 8),
-            //           Text('Ouça a pronúncia dos nomes dos animais',
-            //               style: TextStyle(fontSize: 14, color: Colors.white)),
-            //         ],
-            //       ),
-            //       SizedBox(height: 12),
-            //       Row(
-            //         children: [
-            //           Icon(Icons.mic, color: Colors.lightBlueAccent),
-            //           SizedBox(width: 8),
-            //           Text('Use o microfone para praticar a pronúncia',
-            //               style: TextStyle(fontSize: 14, color: Colors.white)),
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // ),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
