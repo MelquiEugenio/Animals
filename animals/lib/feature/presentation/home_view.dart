@@ -109,7 +109,7 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF282b30),
         title: const Text(
-          'Animals Names and Sounds',
+          'Nomes dos Animais em Inglês',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
@@ -127,7 +127,7 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Icon(Icons.touch_app, color: Colors.orange),
                       SizedBox(width: 8),
-                      Text('Tap on an animal to hear its sound',
+                      Text('Toque em um animal para ouvir seu som',
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                     ],
                   ),
@@ -136,7 +136,7 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Icon(Icons.volume_up, color: Colors.lightGreenAccent),
                       SizedBox(width: 8),
-                      Text('Listen to the pronunciation of animal names',
+                      Text('Ouça a pronúncia dos nomes dos animais',
                       
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                     ],
@@ -146,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Icon(Icons.mic, color: Colors.lightBlueAccent),
                       SizedBox(width: 8),
-                      Text('Use the mic to practice pronunciation',
+                      Text('Use o microfone para praticar a pronúncia',
                           style: TextStyle(fontSize: 14,color: Colors.white)),
                     ],
                   ),
