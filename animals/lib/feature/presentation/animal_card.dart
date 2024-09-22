@@ -23,9 +23,11 @@ class AnimalCard extends StatefulWidget {
   State<AnimalCard> createState() => _AnimalCardState();
 }
 
-class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateMixin {
+class _AnimalCardState extends State<AnimalCard>
+    with SingleTickerProviderStateMixin {
   late final AudioPlayer _player;
-  late final AudioPlayer _recordingFinishPlayer;  // New AudioPlayer for finish sound
+  late final AudioPlayer
+      _recordingFinishPlayer; // New AudioPlayer for finish sound
   late final stt.SpeechToText _speechToText;
   Color _backgroundColor = Colors.white;
   bool _isSpeechAvailable = false;
@@ -37,7 +39,7 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _player = AudioPlayer();
-    _recordingFinishPlayer = AudioPlayer();  // Initialize the new AudioPlayer
+    _recordingFinishPlayer = AudioPlayer(); // Initialize the new AudioPlayer
     _speechToText = stt.SpeechToText();
     _initSpeechToText();
 
@@ -55,7 +57,7 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
   @override
   void dispose() {
     _player.dispose();
-    _recordingFinishPlayer.dispose();  // Dispose the new AudioPlayer
+    _recordingFinishPlayer.dispose(); // Dispose the new AudioPlayer
     _controller.dispose();
     super.dispose();
   }
@@ -121,20 +123,22 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
       setState(() {
         recognizedText.contains(widget.animalName.toLowerCase())
             ? {
-              _backgroundColor = Colors.lightGreenAccent,
-              _playRecordingFinishSound(true)
-            }
+                _backgroundColor = Colors.lightGreenAccent,
+                _playRecordingFinishSound(true)
+              }
             : {
-              _backgroundColor = const Color(0xffff7f7f),
-              _playRecordingFinishSound(false)
-            };
-        _isRecording = false;  // Reset recording state
+                _backgroundColor = const Color(0xffff7f7f),
+                _playRecordingFinishSound(false)
+              };
+        _isRecording = false; // Reset recording state
       });
     }
   }
 
   void _playRecordingFinishSound(bool isCorrect) {
-    _recordingFinishPlayer.play(AssetSource(isCorrect ? 'sounds/positive-answer.wav' : 'sounds/negative-answer.wav'));  // Replace with your sound file
+    _recordingFinishPlayer.play(AssetSource(isCorrect
+        ? 'sounds/positive-answer.wav'
+        : 'sounds/negative-answer.wav')); // Replace with your sound file
   }
 
   void _handleTap() {
@@ -143,7 +147,8 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -154,7 +159,8 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
         onTap: _handleTap,
         child: Card(
           color: _backgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           child: Row(
             children: [
               Expanded(
@@ -168,7 +174,8 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
                     );
                   },
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
+                    borderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(20)),
                     child: Image.asset(
                       widget.imageAsset,
                       fit: BoxFit.fitHeight,
@@ -182,15 +189,17 @@ class _AnimalCardState extends State<AnimalCard> with SingleTickerProviderStateM
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildActionButton(
-                      onPressed: _handleMicPress,
-                      color: _isRecording ? Colors.red : Colors.lightBlueAccent,
-                      icon: _isRecording ? Icons.fiber_manual_record : Icons.mic,
+                      onPressed: () => _player
+                          .play(AssetSource(widget.animalNameSoundAsset)),
+                      color: Colors.lightGreenAccent,
+                      icon: Icons.volume_up,
                     ),
                     const SizedBox(height: 16),
                     _buildActionButton(
-                      onPressed: () => _player.play(AssetSource(widget.animalNameSoundAsset)),
-                      color: Colors.lightGreenAccent,
-                      icon: Icons.volume_up,
+                      onPressed: _handleMicPress,
+                      color: _isRecording ? Colors.red : Colors.lightBlueAccent,
+                      icon:
+                          _isRecording ? Icons.fiber_manual_record : Icons.mic,
                     ),
                   ],
                 ),

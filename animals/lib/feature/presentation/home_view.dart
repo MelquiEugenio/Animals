@@ -124,7 +124,7 @@ class _HomeViewState extends State<HomeView> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.touch_app, color: Colors.blue),
+                      Icon(Icons.touch_app, color: Colors.orange),
                       SizedBox(width: 8),
                       Text('Tap on an animal to hear its sound',
                           style: TextStyle(fontSize: 14)),
@@ -133,7 +133,7 @@ class _HomeViewState extends State<HomeView> {
                   SizedBox(height: 12),
                   Row(
                     children: [
-                      Icon(Icons.volume_up, color: Colors.orange),
+                      Icon(Icons.volume_up, color: Colors.lightGreenAccent),
                       SizedBox(width: 8),
                       Text('Listen to the pronunciation of animal names',
                           style: TextStyle(fontSize: 14)),
@@ -142,7 +142,7 @@ class _HomeViewState extends State<HomeView> {
                   SizedBox(height: 12),
                   Row(
                     children: [
-                      Icon(Icons.mic, color: Colors.green),
+                      Icon(Icons.mic, color: Colors.lightBlueAccent),
                       SizedBox(width: 8),
                       Text('Use the mic to practice pronunciation',
                           style: TextStyle(fontSize: 14)),
