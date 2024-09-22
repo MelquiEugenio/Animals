@@ -30,6 +30,7 @@ class _AnimalCardState extends State<AnimalCard>
       _recordingFinishPlayer; // New AudioPlayer for finish sound
   late final stt.SpeechToText _speechToText;
   Color _backgroundColor = const Color(0xFF424549);
+  Color _nameColor = const Color.fromARGB(255, 209, 209, 209);
   bool _isSpeechAvailable = false;
   bool _isRecording = false;
   late AnimationController _controller;
@@ -130,6 +131,7 @@ class _AnimalCardState extends State<AnimalCard>
                 _backgroundColor = const Color(0xffff7f7f),
                 _playRecordingFinishSound(false)
               };
+        _nameColor = const Color(0xFF424549);
         _isRecording = false; // Reset recording state
       });
     }
@@ -151,67 +153,6 @@ class _AnimalCardState extends State<AnimalCard>
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: GestureDetector(
-        onTap: _handleTap,
-        child: Card(
-          elevation: 5,
-          color: _backgroundColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    return Transform.rotate(
-                      angle: _animation.value,
-                      child: child,
-                    );
-                  },
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.horizontal(
-                        left: Radius.circular(20)),
-                    child: Image.asset(
-                      widget.imageAsset,
-                      fit: BoxFit.fitHeight,
-                      height: 150,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildActionButton(
-                      onPressed: () => _player
-                          .play(AssetSource(widget.animalNameSoundAsset)),
-                      color: Colors.lightGreen,
-                      icon: Icons.volume_up,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildActionButton(
-                      onPressed: _handleMicPress,
-                      color: _isRecording ? Colors.red : Colors.lightBlueAccent,
-                      icon:
-                          _isRecording ? Icons.fiber_manual_record : Icons.mic,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildActionButton({
     required VoidCallback onPressed,
     required Color color,
@@ -223,6 +164,93 @@ class _AnimalCardState extends State<AnimalCard>
       backgroundColor: color,
       shape: const CircleBorder(),
       child: Icon(icon, color: Colors.white),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: GestureDetector(
+        onTap: _handleTap,
+        child: Stack(
+          children: [
+            Card(
+              elevation: 5,
+              color: _backgroundColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: _animation.value,
+                          child: child,
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(20)),
+                        child: Image.asset(
+                          widget.imageAsset,
+                          fit: BoxFit.fitHeight,
+                          height: 150,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildActionButton(
+                          onPressed: () => _player
+                              .play(AssetSource(widget.animalNameSoundAsset)),
+                          color: Colors.lightGreen,
+                          icon: Icons.volume_up,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildActionButton(
+                          onPressed: _handleMicPress,
+                          color: _isRecording
+                              ? Colors.red
+                              : Colors.lightBlueAccent,
+                          icon: _isRecording
+                              ? Icons.fiber_manual_record
+                              : Icons.mic,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 15,
+              right: 100,
+              child: Text(widget.animalName,
+                  style: TextStyle(
+                    color: _nameColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+            Positioned(
+              top: 20,
+              left: 20,
+              child: Icon(
+                Icons.play_arrow,
+                color: _nameColor,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
