@@ -189,14 +189,16 @@ class _FruitCardState extends State<FruitCard>
                           child: child,
                         );
                       },
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(20)),
-                        child: Image.asset(
-                          widget.imageAsset,
-                          fit: BoxFit.fitHeight,
-                          height: 150,
-                        ),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 15),
+                          Image.asset(
+                            widget.imageAsset,
+                            fit: BoxFit.fitHeight,
+                            height: 120,
+                          ),
+                          const SizedBox(height: 15),
+                        ],
                       ),
                     ),
                   ),
