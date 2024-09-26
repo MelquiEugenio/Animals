@@ -22,4 +22,5 @@ flutter:
   assets:
     - assets/images/
     - assets/images/fruits/
+    - assets/sounds/fruits/
     - assets/sounds/
