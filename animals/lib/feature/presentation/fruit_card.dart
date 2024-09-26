@@ -118,7 +118,7 @@ class _FruitCardState extends State<FruitCard>
 
   void _handleSpeechResult(SpeechRecognitionResult result) {
     if (result.finalResult) {
-      final recognizedText = result.recognizedWords.toLowerCase();
+      final recognizedText = result.recognizedWords.toLowerCase().replaceAll(' ', '');
       setState(() {
         recognizedText.contains(widget.fruitName.toLowerCase())
             ? {

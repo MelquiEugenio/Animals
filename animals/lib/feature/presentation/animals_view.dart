@@ -19,7 +19,6 @@ class _AnimalViewState extends State<AnimalView> {
     'antelope',
     'ape',
     'bat',
-    'bee',
     'bowhead whale',
     'butterfly',
     'cat',
