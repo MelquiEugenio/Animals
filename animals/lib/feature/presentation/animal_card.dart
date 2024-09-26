@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -8,7 +9,6 @@ class AnimalCard extends StatefulWidget {
   final String imageAsset;
   final String soundAsset;
   final String animalNameSoundAsset;
-  final bool microphonePermission;
 
   const AnimalCard({
     super.key,
@@ -16,7 +16,6 @@ class AnimalCard extends StatefulWidget {
     required this.imageAsset,
     required this.soundAsset,
     required this.animalNameSoundAsset,
-    required this.microphonePermission,
   });
 
   @override
@@ -58,7 +57,7 @@ class _AnimalCardState extends State<AnimalCard>
   @override
   void dispose() {
     _player.dispose();
-    _recordingFinishPlayer.dispose(); // Dispose the new AudioPlayer
+    _recordingFinishPlayer.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -77,7 +76,8 @@ class _AnimalCardState extends State<AnimalCard>
   }
 
   void _handleMicPress() async {
-    if (!widget.microphonePermission) {
+    final status = await Permission.microphone.request();
+    if (!status.isGranted) {
       _showSnackBar('A permissão para acessar o microfone não foi concedida.');
       return;
     }
@@ -132,7 +132,7 @@ class _AnimalCardState extends State<AnimalCard>
                 _playRecordingFinishSound(false)
               };
         _nameColor = const Color(0xFF424549);
-        _isRecording = false; // Reset recording state
+        _isRecording = false;
       });
     }
   }
@@ -140,7 +140,7 @@ class _AnimalCardState extends State<AnimalCard>
   void _playRecordingFinishSound(bool isCorrect) {
     _recordingFinishPlayer.play(AssetSource(isCorrect
         ? 'sounds/positive-answer.wav'
-        : 'sounds/negative-answer.wav')); // Replace with your sound file
+        : 'sounds/negative-answer.wav'));
   }
 
   void _handleTap() {

@@ -1,6 +1,5 @@
-import 'package:animals/feature/presentation/animal_card.dart';
+import 'package:animals/feature/presentation/animal_view.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -10,149 +9,91 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool isMicPermited = false;
-  bool isRequestingPermission = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _requestMicrophonePermission();
-  }
-
-  Future<void> _requestMicrophonePermission() async {
-    final status = await Permission.microphone.request();
-    if (status.isGranted) {
-      isMicPermited = true;
-    } else {
-      isMicPermited = false;
-    }
-
-    setState(() {
-      isRequestingPermission = false;
-    });
-  }
-
-  final List<String> animalsNames = [
-    'african gray parrot',
-    'alligator',
-    'alpaca',
-    'anteater',
-    'antelope',
-    'ape',
-    'bat',
-    'bee',
-    'bowhead whale',
-    'butterfly',
-    'cat',
-    'chicken',
-    'cow',
-    'dinosaur',
-    'dog',
-    'dove',
-    'duck',
-    'elephant',
-    'falcon',
-    'ferret',
-    'frog',
-    'giraffe',
-    'guinea pig',
-    'hedgehog',
-    'hippopotamus',
-    'horse',
-    'humpback whale',
-    'hyena',
-    'komodo dragon',
-    'leopard',
-    'lion',
-    'lizard',
-    'moose',
-    'otter',
-    'owl',
-    'panda',
-    'penguin',
-    'pig',
-    'rabbit',
-    'raccoon',
-    'rat',
-    'rattlesnake',
-    'rhinoceros',
-    'robin',
-    'rooster',
-    'scorpion',
-    'shark',
-    'sheep',
-    'swan',
-    'tiger',
-    'turkey',
-    'wolf',
-    'yak',
-    'zebra',
-  ];
-
-  Widget _bodyLoading() {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF282b30),
-        title: const Text(
-          'Nomes dos Animais em Inglês',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      backgroundColor: const Color(0xFF282b30),
-      body: const Center(
-        child: CircularProgressIndicator(
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget _body() {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF282b30),
-        title: const Text(
-          'Nomes dos Animais em Inglês',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      backgroundColor: const Color(0xFF282b30),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: animalsNames.length,
-              itemBuilder: (context, index) {
-                return AnimalCard(
-                  animalName: animalsNames[index],
-                  imageAsset: 'assets/images/${animalsNames[index]}.png',
-                  soundAsset: 'sounds/${animalsNames[index]}.mp3',
-                  animalNameSoundAsset: 'sounds/${animalsNames[index]}.wav',
-                  microphonePermission: isMicPermited,
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
+  Color themeColor = const Color(0xFF282b30);
 
   @override
   Widget build(BuildContext context) {
-    if (isRequestingPermission) {
-      return _bodyLoading();
-    }
-    return _body();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: themeColor,
+        title: const Text(
+          'Inglês básico para crianças',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      backgroundColor: themeColor,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AnimalView()),
+                    );
+                  },
+                  highlightColor: Colors.lightGreenAccent,
+                  child: Card(
+                    color: const Color(0xFF424549),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Image.asset(
+                            'assets/images/lion.png',
+                            fit: BoxFit.fitHeight,
+                            height: 100,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Animais',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Image.asset(
+                          'assets/images/fruits/apple.png',
+                          fit: BoxFit.fitHeight,
+                          height: 100,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Frutas',
+                        style: TextStyle(
+                          color: Color(0xFF424549),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

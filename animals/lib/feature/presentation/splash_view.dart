@@ -9,6 +9,9 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+  bool isMicPermited = false;
+  bool isRequestingPermission = true;
+  
   @override
   void initState() {
     super.initState();
