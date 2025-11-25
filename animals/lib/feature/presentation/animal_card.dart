@@ -157,12 +157,14 @@ class _AnimalCardState extends State<AnimalCard>
     required VoidCallback onPressed,
     required Color color,
     required IconData icon,
+    required String heroTag,
   }) {
     return FloatingActionButton(
       onPressed: onPressed,
       mini: true,
       backgroundColor: color,
       shape: const CircleBorder(),
+      heroTag: heroTag,
       child: Icon(icon, color: Colors.white),
     );
   }
@@ -212,6 +214,7 @@ class _AnimalCardState extends State<AnimalCard>
                               .play(AssetSource(widget.animalNameSoundAsset)),
                           color: Colors.lightGreen,
                           icon: Icons.volume_up,
+                          heroTag: '${widget.animalName}_volume',
                         ),
                         const SizedBox(height: 16),
                         _buildActionButton(
@@ -222,6 +225,7 @@ class _AnimalCardState extends State<AnimalCard>
                           icon: _isRecording
                               ? Icons.fiber_manual_record
                               : Icons.mic,
+                          heroTag: '${widget.animalName}_mic',
                         ),
                       ],
                     ),

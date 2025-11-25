@@ -154,12 +154,14 @@ class _FruitCardState extends State<FruitCard>
     required VoidCallback onPressed,
     required Color color,
     required IconData icon,
+    required String heroTag,
   }) {
     return FloatingActionButton(
       onPressed: onPressed,
       mini: true,
       backgroundColor: color,
       shape: const CircleBorder(),
+      heroTag: heroTag,
       child: Icon(icon, color: Colors.white),
     );
   }
@@ -211,6 +213,7 @@ class _FruitCardState extends State<FruitCard>
                               .play(AssetSource(widget.fruitNameSoundAsset)),
                           color: Colors.lightGreen,
                           icon: Icons.volume_up,
+                          heroTag: '${widget.fruitName}_volume',
                         ),
                         const SizedBox(height: 16),
                         _buildActionButton(
@@ -221,6 +224,7 @@ class _FruitCardState extends State<FruitCard>
                           icon: _isRecording
                               ? Icons.fiber_manual_record
                               : Icons.mic,
+                          heroTag: '${widget.fruitName}_mic',
                         ),
                       ],
                     ),
